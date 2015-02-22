@@ -27,7 +27,7 @@ public class MainActivity extends ActionBarActivity {
     public String tag = "jpgto";
     public String webViewTitle = "";
     String errorRegExMismatching = "input can contain 1-30 alphanumeric+space, non latin letters not allowed";
-    String regEx = "[A-Za-z0-9 ]{1,30}";
+    String regEx = "[A-Za-z0-9 ]{1,30}"; //allows only alphanumeric and spaces from 1 to 30 chars
 
     EditText editText;
     Button showMe;
@@ -38,6 +38,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         editText = (EditText)findViewById(R.id.editText);
         showMe = (Button)findViewById(R.id.button);
 
@@ -45,13 +46,13 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(View v) {
                 String subject = editText.getText().toString();
                 webViewTitle = subject;
+                subject = removeSpaces(subject);
                 try {
                     validateInputByRegex(webViewTitle);
                 } catch (MyException e) {
                     e.printStackTrace();
                     return;
                 }
-                subject = removeSpaces(subject);
                 String url = ("http://" + subject + ".jpg.to");
                 new HttpAsyncTask().execute(url);
 
@@ -98,6 +99,7 @@ public class MainActivity extends ActionBarActivity {
                 result = getResultReturnURLOfImage(result);
             }else {
                 result = "Didn't work";
+
         }
             } catch (Exception e){
             Log.i(tag, e.getLocalizedMessage());
@@ -146,7 +148,6 @@ public class MainActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(String result) {
 
-            showMe.setText(result);
             Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
             intent.putExtra("imageUrl", result);
             intent.putExtra("title", webViewTitle);

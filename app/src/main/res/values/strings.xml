@@ -3,6 +3,7 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="button_name">Show It!</string>
+    <string name="button_name"> GO </string>
     <string name="title_activity_image_view">JpgTo</string>
+    <string name="hint">Type any word...</string>
 </resources>
