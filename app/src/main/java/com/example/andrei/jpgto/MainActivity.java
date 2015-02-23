@@ -28,6 +28,8 @@ public class MainActivity extends ActionBarActivity {
     public String webViewTitle = "";
     String errorRegExMismatching = "input can contain 1-30 alphanumeric+space, non latin letters not allowed";
     String regEx = "[A-Za-z0-9 ]{1,30}"; //allows only alphanumeric and spaces from 1 to 30 chars
+    String pattern1 = "src=\"(.*?)\" "; //regex to cut all except ulr of image
+                                        // to be transmitted to webview activity via intent
 
     EditText editText;
     Button showMe;
@@ -44,6 +46,7 @@ public class MainActivity extends ActionBarActivity {
 
         showMe.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
                 String subject = editText.getText().toString();
                 webViewTitle = subject;
                 subject = removeSpaces(subject);
@@ -63,15 +66,12 @@ public class MainActivity extends ActionBarActivity {
     private void validateInputByRegex(String subject) throws MyException{
         Pattern patern = Pattern.compile(regEx);
         Matcher matcher = patern.matcher(subject);
-        if(matcher.find()){
-
-        }else {
+        if(!matcher.find()){
             throw new MyException();
         }
 
 
     }
-
 
     private String removeSpaces(String subject) {
         subject = subject.replaceAll("\\s", "");
@@ -90,10 +90,6 @@ public class MainActivity extends ActionBarActivity {
             //make HttpRequest to given url
             HttpResponse httpResponse = httpClient.execute(new HttpGet(url));
 
-            if (httpResponse.getStatusLine().getStatusCode()!=200){
-                Toast.makeText(getApplicationContext(), "No internet connection. Check your connection and try again.", Toast.LENGTH_SHORT).show();
-                return "";
-            }
             //receive response in inputStream
             inputStream = httpResponse.getEntity().getContent();
 
@@ -103,7 +99,6 @@ public class MainActivity extends ActionBarActivity {
                 result = getResultReturnURLOfImage(result);
             }else {
                 result = "Didn't work";
-
         }
             } catch (Exception e){
             Log.i(tag, e.getLocalizedMessage());
@@ -113,8 +108,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private String getResultReturnURLOfImage(String result) {
-        Pattern pattern = Pattern.compile("src=\"(.*?)\" "); //regex to cut all except ulr of image
-                                // to be transmitted to webview activity via intent
+        Pattern pattern = Pattern.compile(pattern1);
         Matcher matcher = pattern.matcher(result);
         if (matcher.find()) {
             result = matcher.group(1);
