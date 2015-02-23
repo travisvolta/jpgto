@@ -90,6 +90,10 @@ public class MainActivity extends ActionBarActivity {
             //make HttpRequest to given url
             HttpResponse httpResponse = httpClient.execute(new HttpGet(url));
 
+            if (httpResponse.getStatusLine().getStatusCode()!=200){
+                Toast.makeText(getApplicationContext(), "No internet connection. Check your connection and try again.", Toast.LENGTH_SHORT).show();
+                return "";
+            }
             //receive response in inputStream
             inputStream = httpResponse.getEntity().getContent();
 
